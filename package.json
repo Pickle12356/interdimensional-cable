@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "type": "commonjs",
   "scripts": {
-    "build": "echo 'Nothing to build'",
+    "build": "echo 'No build step'",
     "start": "vercel dev"
   },
   "dependencies": {

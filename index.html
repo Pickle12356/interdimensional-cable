@@ -1,87 +1,124 @@
-/* === FILE: index.html === */
-
-<!DOCTYPE html><html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>📡 Interdimensional Cable</title>
-    <style>
-      body {
-        background: black;
-        color: cyan;
-        font-family: sans-serif;
-        text-align: center;
-        padding: 50px;
-      }
-      #player {
-        width: 90vw;
-        height: 50vh;
-        margin: 20px auto;
-        border: 4px solid cyan;
-        box-shadow: 0 0 20px cyan;
-      }
-      button {
-        font-size: 1.2em;
-        background: cyan;
-        color: black;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: background 0.3s;
-      }
-      button:hover {
-        background: white;
-      }
-    </style>
-  </head>
-  <body>
-    <h1>📡 Interdimensional Cable</h1>
-    <div id="player"></div>
-    <button onclick="playNext()">Next Channel 📺</button><script>
-  let videoQueue = []
-  let currentIndex = 0
-
-  async function fetchVideos() {
-    const res = await fetch('/api/fetchVideos')
-    const data = await res.json()
-    if (data.videos && data.videos.length > 0) {
-      videoQueue = videoQueue.concat(data.videos)
-    }
-  }
-
-  function playVideo(id) {
-    const player = document.getElementById('player')
-    player.innerHTML = `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/${id}?autoplay=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`
-  }
-
-  async function playNext() {
-    if (currentIndex >= videoQueue.length) {
-      await fetchVideos()
-      currentIndex = 0
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>📡 Interdimensional Cable</title>
+  <style>
+    body {
+      background: black;
+      color: aqua;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      overflow: hidden;
     }
 
-    if (videoQueue.length > 0) {
-      playVideo(videoQueue[currentIndex])
-      currentIndex++
+    h1 {
+      font-size: 2em;
+      margin-bottom: 20px;
+      text-shadow: 0 0 10px cyan;
+      z-index: 1;
     }
-  }
 
-  // Initial load
-  fetchVideos().then(playNext)
-</script>
+    #video-container {
+      width: 90vw;
+      max-width: 800px;
+      height: 450px;
+      border: 5px solid cyan;
+      box-shadow: 0 0 20px cyan;
+      margin-bottom: 30px;
+      background: black;
+      position: relative;
+      z-index: 1;
+    }
 
-  </body>
-</html>/* === FILE: api/fetchVideos.js === */ export default async function handler(req, res) { const API_KEY = process.env.YOUTUBE_API_KEY; const channels = [ "UCi7pY1Pp6L6tJv7jIF4L1QQ", // Bigfoot Vlog "UCRh2NURaF4u-DHg9cK1iHXA", // Neuralviz "UC6axDmOQwUTUt-H5Ipucy5g"  // BLVCKLIGHTAI ];
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
 
-let results = [];
+    button {
+      font-size: 1.2em;
+      padding: 12px 24px;
+      border: none;
+      background-color: cyan;
+      color: black;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 0 10px cyan;
+      z-index: 1;
+    }
 
-try { for (const channelId of channels) { const url = https://www.googleapis.com/youtube/v3/search?key=${API_KEY}&channelId=${channelId}&maxResults=10&type=video&order=date&part=snippet; const response = await fetch(url); const data = await response.json(); const videoIds = data.items?.map(item => item.id.videoId); results.push(...videoIds); }
+    button:hover {
+      background-color: #00ffffaa;
+    }
 
-results = results.filter(Boolean).sort(() => 0.5 - Math.random());
+    #static-overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: black url('https://media.giphy.com/media/oEI9uBYSzLpBK/giphy.gif') center center no-repeat;
+      background-size: cover;
+      z-index: 9999;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div id="static-overlay"></div>
 
-res.status(200).json({ videos: results });
+  <h1>📡 Interdimensional Cable</h1>
+  <div id="video-container">
+    <iframe id="video" allowfullscreen></iframe>
+  </div>
+  <button onclick="loadNextVideo()">Next Channel 📺</button>
 
-} catch (error) { console.error("Fetch error:", error); res.status(500).json({ error: "Failed to fetch videos." }); } }
+  <script>
+    let allVideos = [];
+    let currentIndex = 0;
 
-                                                                                                                                                                                            </html>
+    async function fetchVideos() {
+      try {
+        const response = await fetch("/api/fetchVideos");
+        const data = await response.json();
+        allVideos = data.videos.filter(v => v.id?.videoId);
+        currentIndex = 0;
+        loadNextVideo();
+      } catch (err) {
+        console.error("Failed to fetch videos", err);
+      }
+    }
+
+    function showStatic(callback) {
+      const overlay = document.getElementById("static-overlay");
+      overlay.style.display = "block";
+      setTimeout(() => {
+        overlay.style.display = "none";
+        callback();
+      }, 600); // static lasts 600ms
+    }
+
+    function loadNextVideo() {
+      if (allVideos.length === 0 || currentIndex >= allVideos.length) {
+        fetchVideos();
+        return;
+      }
+
+      showStatic(() => {
+        const videoId = allVideos[currentIndex].id.videoId;
+        const iframe = document.getElementById("video");
+        iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+        currentIndex++;
+      });
+    }
+
+    fetchVideos();
+  </script>
+</body>
+</html>

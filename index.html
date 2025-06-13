@@ -100,5 +100,31 @@
 
     loadVideos();
   </script>
+  <div style="text-align:center; padding:20px; font-size:1.2rem;">
+      <h3 id="show-title">🔮 Interdimensional Show Loading...</h3>
+        <button onclick="generateShow()">Next Show 🔁</button>
+        </div>
+
+        <script>
+          const shows = [
+              "The Galactic Worm Dentist",
+                  "Planet Toast Reviews Earth Snacks",
+                      "Alien Dad Tries VR for the First Time",
+                          "Chrono Chicken Time Travels Wrong",
+                              "Yeti Does Standup in Martian Jail",
+                                  "The Blobfish Therapist",
+                                      "Robot Grandpa’s Quantum Rant",
+                                          "Glitch Pixel Cooks Human Pasta",
+                                              "Two Moons and a Microwaved God",
+                                                  "Bigfoot Opens a Startup in Jupiter"
+                                                    ];
+
+                                                      function generateShow() {
+                                                          const title = shows[Math.floor(Math.random() * shows.length)];
+                                                              document.getElementById("show-title").innerText = "📺 " + title;
+                                                                }
+
+                                                                  generateShow();
+                                                                  </script>8k
 </body>
 </html>

@@ -1,28 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>📡 Interdimensional Cable</title>
   <style>
     body {
+      margin: 0;
+      padding: 20px;
+      font-family: Arial, sans-serif;
       background: black;
       color: aqua;
-      font-family: Arial, sans-serif;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      height: 100vh;
-      margin: 0;
-      overflow: hidden;
     }
 
     h1 {
       font-size: 2em;
-      margin-bottom: 20px;
       text-shadow: 0 0 10px cyan;
-      z-index: 1;
+      margin-bottom: 20px;
     }
 
     #video-container {
@@ -31,16 +28,21 @@
       height: 450px;
       border: 5px solid cyan;
       box-shadow: 0 0 20px cyan;
-      margin-bottom: 30px;
       background: black;
+      margin-bottom: 20px;
       position: relative;
-      z-index: 1;
     }
 
     iframe {
       width: 100%;
       height: 100%;
       border: none;
+    }
+
+    #fallback {
+      color: gray;
+      text-align: center;
+      padding-top: 200px;
     }
 
     button {
@@ -52,7 +54,7 @@
       border-radius: 8px;
       cursor: pointer;
       box-shadow: 0 0 10px cyan;
-      z-index: 1;
+      margin-bottom: 40px;
     }
 
     button:hover {
@@ -75,7 +77,8 @@
 
   <h1>📡 Interdimensional Cable</h1>
   <div id="video-container">
-    <iframe id="video" allowfullscreen></iframe>
+    <div id="fallback">Loading video...</div>
+    <iframe id="video" allowfullscreen style="display:none;"></iframe>
   </div>
   <button onclick="loadNextVideo()">Next Channel 📺</button>
 
@@ -87,11 +90,13 @@
       try {
         const response = await fetch("/api/fetchVideos");
         const data = await response.json();
+        console.log("Fetched videos:", data);
         allVideos = data.videos.filter(v => v.id?.videoId);
         currentIndex = 0;
         loadNextVideo();
       } catch (err) {
         console.error("Failed to fetch videos", err);
+        document.getElementById("fallback").textContent = "⚠️ Failed to load videos.";
       }
     }
 
@@ -101,20 +106,31 @@
       setTimeout(() => {
         overlay.style.display = "none";
         callback();
-      }, 600); // static lasts 600ms
+      }, 600); // static flicker duration
     }
 
     function loadNextVideo() {
-      if (allVideos.length === 0 || currentIndex >= allVideos.length) {
+      if (!allVideos.length) {
+        document.getElementById("fallback").textContent = "No videos found.";
+        return;
+      }
+
+      if (currentIndex >= allVideos.length) {
         fetchVideos();
         return;
       }
 
       showStatic(() => {
-        const videoId = allVideos[currentIndex].id.videoId;
-        const iframe = document.getElementById("video");
-        iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
-        currentIndex++;
+        const videoId = allVideos[currentIndex]?.id?.videoId;
+        if (videoId) {
+          const iframe = document.getElementById("video");
+          iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+          iframe.style.display = "block";
+          document.getElementById("fallback").style.display = "none";
+          currentIndex++;
+        } else {
+          document.getElementById("fallback").textContent = "⚠️ Video not available.";
+        }
       });
     }
 

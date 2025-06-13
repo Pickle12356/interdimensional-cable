@@ -1,51 +1,87 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
+/* === FILE: index.html === */
+
+<!DOCTYPE html><html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>📡 Interdimensional Cable</title>
-      <style>
-          body {
-                background-color: #000;
-                      color: #0ff;
-                            text-align: center;
-                                  font-family: Arial, sans-serif;
-                                        padding: 30px;
-                                            }
-                                                iframe {
-                                                      width: 90%;
-                                                            height: 500px;
-                                                                  border: none;
-                                                                        margin-bottom: 20px;
-                                                                            }
-                                                                                button {
-                                                                                      background-color: #00ffff;
-                                                                                            color: black;
-                                                                                                  border: none;
-                                                                                                        padding: 15px 25px;
-                                                                                                              font-size: 18px;
-                                                                                                                    cursor: pointer;
-                                                                                                                          border-radius: 8px;
-                                                                                                                              }
-                                                                                                                                </style>
-                                                                                                                                </head>
-                                                                                                                                <body>
-                                                                                                                                  <h1>📡 Interdimensional Cable</h1>
-                                                                                                                                    <iframe id="videoPlayer" allowfullscreen></iframe><br>
-                                                                                                                                      <button onclick="loadRandomVideo()">Next Channel 📺</button>
+    <style>
+      body {
+        background: black;
+        color: cyan;
+        font-family: sans-serif;
+        text-align: center;
+        padding: 50px;
+      }
+      #player {
+        width: 90vw;
+        height: 50vh;
+        margin: 20px auto;
+        border: 4px solid cyan;
+        box-shadow: 0 0 20px cyan;
+      }
+      button {
+        font-size: 1.2em;
+        background: cyan;
+        color: black;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background 0.3s;
+      }
+      button:hover {
+        background: white;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>📡 Interdimensional Cable</h1>
+    <div id="player"></div>
+    <button onclick="playNext()">Next Channel 📺</button><script>
+  let videoQueue = []
+  let currentIndex = 0
 
-                                                                                                                                        <script>
-                                                                                                                                            const videos = [
-                                                                                                                                                  "https://www.youtube.com/embed/dQw4w9WgXcQ",
-                                                                                                                                                        "https://www.youtube.com/embed/MtN1YnoL46Q",
-                                                                                                                                                              "https://www.youtube.com/embed/9bZkp7q19f0"
-                                                                                                                                                                  ];
+  async function fetchVideos() {
+    const res = await fetch('/api/fetchVideos')
+    const data = await res.json()
+    if (data.videos && data.videos.length > 0) {
+      videoQueue = videoQueue.concat(data.videos)
+    }
+  }
 
-                                                                                                                                                                      function loadRandomVideo() {
-                                                                                                                                                                            const random = Math.floor(Math.random() * videos.length);
-                                                                                                                                                                                  document.getElementById("videoPlayer").src = videos[random] + "?autoplay=1";
-                                                                                                                                                                                      }
+  function playVideo(id) {
+    const player = document.getElementById('player')
+    player.innerHTML = `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/${id}?autoplay=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`
+  }
 
-                                                                                                                                                                                          window.onload = loadRandomVideo;
-                                                                                                                                                                                            </script>
-                                                                                                                                                                                            </body>
+  async function playNext() {
+    if (currentIndex >= videoQueue.length) {
+      await fetchVideos()
+      currentIndex = 0
+    }
+
+    if (videoQueue.length > 0) {
+      playVideo(videoQueue[currentIndex])
+      currentIndex++
+    }
+  }
+
+  // Initial load
+  fetchVideos().then(playNext)
+</script>
+
+  </body>
+</html>/* === FILE: api/fetchVideos.js === */ export default async function handler(req, res) { const API_KEY = process.env.YOUTUBE_API_KEY; const channels = [ "UCi7pY1Pp6L6tJv7jIF4L1QQ", // Bigfoot Vlog "UCRh2NURaF4u-DHg9cK1iHXA", // Neuralviz "UC6axDmOQwUTUt-H5Ipucy5g"  // BLVCKLIGHTAI ];
+
+let results = [];
+
+try { for (const channelId of channels) { const url = https://www.googleapis.com/youtube/v3/search?key=${API_KEY}&channelId=${channelId}&maxResults=10&type=video&order=date&part=snippet; const response = await fetch(url); const data = await response.json(); const videoIds = data.items?.map(item => item.id.videoId); results.push(...videoIds); }
+
+results = results.filter(Boolean).sort(() => 0.5 - Math.random());
+
+res.status(200).json({ videos: results });
+
+} catch (error) { console.error("Fetch error:", error); res.status(500).json({ error: "Failed to fetch videos." }); } }
+
                                                                                                                                                                                             </html>

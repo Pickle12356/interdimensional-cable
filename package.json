@@ -1,6 +1,9 @@
 {
-  "type": "module",
-  "dependencies": {
-    "node-fetch": "^3.4.0"
-  }
+    "name": "interdimensional-cable",
+      "version": "1.0.0",
+        "type": "commonjs",
+          "dependencies": {
+              "node-fetch": "^2.6.11"
+                }
+                }
 }

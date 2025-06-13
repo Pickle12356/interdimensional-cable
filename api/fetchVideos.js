@@ -1,3 +1,4 @@
+import fetch from "node-fetch";
 export default async function handler(req, res) {
     const API_KEY = "AIzaSyAHMHqvjH6cY3uiib32BlfY6B6ina5Y4vo";
       const channels = [

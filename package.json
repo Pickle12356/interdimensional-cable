@@ -1,6 +1,12 @@
 {
-  "type": "module",
-  "dependencies": {
-    "node-fetch": "^3.4.0"
-  }
-}
+    "name": "interdimensional-cable",
+      "version": "1.0.0",
+        "type": "commonjs",
+          "scripts": {
+              "build": "echo \"Nothing to build\"",
+                  "start": "vercel dev"
+                    },
+                      "dependencies": {
+                          "node-fetch": "^2.6.11"
+                            }
+                            }

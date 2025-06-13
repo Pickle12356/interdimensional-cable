@@ -1,137 +1,91 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>📡 Interdimensional Cable</title>
   <style>
     body {
       margin: 0;
-      padding: 20px;
-      font-family: Arial, sans-serif;
-      background: black;
-      color: aqua;
+      background-color: black;
+      color: cyan;
+      font-family: sans-serif;
       display: flex;
       flex-direction: column;
       align-items: center;
     }
-
     h1 {
-      font-size: 2em;
-      text-shadow: 0 0 10px cyan;
-      margin-bottom: 20px;
+      margin-top: 20px;
+      text-shadow: 0 0 15px cyan;
     }
-
     #video-container {
-      width: 90vw;
+      width: 80vw;
       max-width: 800px;
-      height: 450px;
+      aspect-ratio: 16/9;
+      background-color: black;
       border: 5px solid cyan;
-      box-shadow: 0 0 20px cyan;
-      background: black;
-      margin-bottom: 20px;
-      position: relative;
+      box-shadow: 0 0 30px cyan;
+      margin-top: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
-
-    iframe {
+    #player {
       width: 100%;
       height: 100%;
-      border: none;
     }
-
-    #fallback {
-      color: gray;
-      text-align: center;
-      padding-top: 200px;
+    #static {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: url("static.gif") center/cover no-repeat;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
     }
-
     button {
-      font-size: 1.2em;
-      padding: 12px 24px;
-      border: none;
+      margin: 30px;
+      padding: 15px 30px;
+      font-size: 1.2rem;
       background-color: cyan;
       color: black;
-      border-radius: 8px;
+      border: none;
+      border-radius: 10px;
       cursor: pointer;
-      box-shadow: 0 0 10px cyan;
-      margin-bottom: 40px;
-    }
-
-    button:hover {
-      background-color: #00ffffaa;
-    }
-
-    #static-overlay {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100vw; height: 100vh;
-      background: black url('https://media.giphy.com/media/oEI9uBYSzLpBK/giphy.gif') center center no-repeat;
-      background-size: cover;
-      z-index: 9999;
-      display: none;
+      font-weight: bold;
+      box-shadow: 0 0 20px cyan;
     }
   </style>
 </head>
 <body>
-  <div id="static-overlay"></div>
-
   <h1>📡 Interdimensional Cable</h1>
   <div id="video-container">
-    <div id="fallback">Loading video...</div>
-    <iframe id="video" allowfullscreen style="display:none;"></iframe>
+    <div id="static"></div>
+    <iframe id="player" src="" frameborder="0" allowfullscreen></iframe>
   </div>
-  <button onclick="loadNextVideo()">Next Channel 📺</button>
+  <button onclick="nextVideo()">Next Channel 📺</button>
 
   <script>
-    let allVideos = [];
-    let currentIndex = 0;
+    let videos = [];
+    let current = 0;
 
     async function fetchVideos() {
-      try {
-        const response = await fetch("/api/fetchVideos");
-        const data = await response.json();
-        console.log("Fetched videos:", data);
-        allVideos = data.videos.filter(v => v.id?.videoId);
-        currentIndex = 0;
-        loadNextVideo();
-      } catch (err) {
-        console.error("Failed to fetch videos", err);
-        document.getElementById("fallback").textContent = "⚠️ Failed to load videos.";
-      }
+      const res = await fetch('/api/fetchVideos');
+      const data = await res.json();
+      videos = data.videos.filter(v => v.id?.videoId);
+      nextVideo();
     }
 
-    function showStatic(callback) {
-      const overlay = document.getElementById("static-overlay");
-      overlay.style.display = "block";
+    function nextVideo() {
+      if (!videos.length) return;
+      const staticScreen = document.getElementById('static');
+      staticScreen.style.opacity = 1;
       setTimeout(() => {
-        overlay.style.display = "none";
-        callback();
-      }, 600); // static flicker duration
-    }
-
-    function loadNextVideo() {
-      if (!allVideos.length) {
-        document.getElementById("fallback").textContent = "No videos found.";
-        return;
-      }
-
-      if (currentIndex >= allVideos.length) {
-        fetchVideos();
-        return;
-      }
-
-      showStatic(() => {
-        const videoId = allVideos[currentIndex]?.id?.videoId;
-        if (videoId) {
-          const iframe = document.getElementById("video");
-          iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
-          iframe.style.display = "block";
-          document.getElementById("fallback").style.display = "none";
-          currentIndex++;
-        } else {
-          document.getElementById("fallback").textContent = "⚠️ Video not available.";
-        }
-      });
+        const video = videos[Math.floor(Math.random() * videos.length)];
+        const id = video.id.videoId;
+        document.getElementById('player').src = `https://www.youtube.com/embed/${id}?autoplay=1`;
+        staticScreen.style.opacity = 0;
+      }, 600);
     }
 
     fetchVideos();

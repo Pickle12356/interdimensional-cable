@@ -3,129 +3,50 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Interdimensional Cable</title>
-  <style>
-    body {
-      margin: 0;
-      background: linear-gradient(to bottom right, #1a001a, #0d0d0d);
-      font-family: 'Segoe UI', sans-serif;
-      color: #00ffcc;
-      overflow-x: hidden;
-    }
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>📡 Interdimensional Cable</title>
+        <style>
+            body {
+                  background: black;
+                        color: white;
+                              font-family: sans-serif;
+                                    text-align: center;
+                                        }
+                                            iframe {
+                                                  width: 80vw;
+                                                        height: 45vw;
+                                                              max-width: 960px;
+                                                                    max-height: 540px;
+                                                                          margin-top: 20px;
+                                                                              }
+                                                                                  button {
+                                                                                        margin-top: 20px;
+                                                                                              padding: 12px 24px;
+                                                                                                    font-size: 1.2rem;
+                                                                                                          background: cyan;
+                                                                                                                border: none;
+                                                                                                                      border-radius: 5px;
+                                                                                                                            cursor: pointer;
+                                                                                                                                }
+                                                                                                                                  </style>
+                                                                                                                                  </head>
+                                                                                                                                  <body>
+                                                                                                                                    <h1>📡 Interdimensional Cable</h1>
+                                                                                                                                      <iframe id="video" src="" frameborder="0" allowfullscreen></iframe>
+                                                                                                                                        <br />
+                                                                                                                                          <button onclick="loadVideo()">Next Channel 📺</button>
 
-    header {
-      padding: 20px;
-      text-align: center;
-      font-size: 2rem;
-      background: #330033;
-      border-bottom: 4px solid #00ffcc;
-      box-shadow: 0 4px 10px #000;
-    }
+                                                                                                                                            <script>
+                                                                                                                                                async function loadVideo() {
+                                                                                                                                                      const res = await fetch("/api/fetchVideos");
+                                                                                                                                                            const data = await res.json();
+                                                                                                                                                                  const videos = data.videos;
+                                                                                                                                                                        if (videos.length === 0) return;
+                                                                                                                                                                              const random = videos[Math.floor(Math.random() * videos.length)];
+                                                                                                                                                                                    document.getElementById("video").src = `https://www.youtube.com/embed/${random}`;
+                                                                                                                                                                                        }
 
-    .video-feed {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 30px;
-      padding: 30px 10px;
-    }
-
-    .video-box {
-      width: 90%;
-      max-width: 800px;
-      aspect-ratio: 16 / 9;
-      background: #000;
-      border: 3px solid #00ffcc;
-      border-radius: 15px;
-      overflow: hidden;
-      box-shadow: 0 0 20px #00ffcc33;
-    }
-
-    iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
-    }
-
-    #next-btn {
-      position: fixed;
-      bottom: 30px;
-      right: 30px;
-      background: #00ffcc;
-      color: #000;
-      border: none;
-      padding: 15px 20px;
-      font-size: 1rem;
-      border-radius: 10px;
-      box-shadow: 0 0 10px #00ffcc;
-      cursor: pointer;
-      z-index: 999;
-    }
-  </style>
-</head>
-<body>
-  <header>📡 Interdimensional Cable</header>
-  <div class="video-feed" id="video-feed"></div>
-  <button id="next-btn">Next Channel 🔁</button>
-
-  <script>
-    const videos = [
-      "https://www.youtube.com/embed/Lw0xi1C2OtM",
-      "https://www.youtube.com/embed/JmTBe_wuF4g",
-      "https://www.youtube.com/embed/z2S_wZKMJXg",
-      "https://www.youtube.com/embed/Tw6v4iM-NI0",
-      "https://www.youtube.com/embed/HqM7nNUpaYU"
-    ];
-
-    function shuffle(arr) {
-      return arr.sort(() => Math.random() - 0.5);
-    }
-
-    function loadVideos() {
-      const container = document.getElementById("video-feed");
-      container.innerHTML = "";
-      const shuffled = shuffle([...videos]);
-      shuffled.forEach((src) => {
-        const box = document.createElement("div");
-        box.className = "video-box";
-        box.innerHTML = `<iframe src="${src}" allowfullscreen></iframe>`;
-        container.appendChild(box);
-      });
-    }
-
-    document.getElementById("next-btn").addEventListener("click", () => {
-      loadVideos();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
-
-    loadVideos();
-  </script>
-  <div style="text-align:center; padding:20px; font-size:1.2rem;">
-      <h3 id="show-title">🔮 Interdimensional Show Loading...</h3>
-        <button onclick="generateShow()">Next Show 🔁</button>
-        </div>
-
-        <script>
-          const shows = [
-              "The Galactic Worm Dentist",
-                  "Planet Toast Reviews Earth Snacks",
-                      "Alien Dad Tries VR for the First Time",
-                          "Chrono Chicken Time Travels Wrong",
-                              "Yeti Does Standup in Martian Jail",
-                                  "The Blobfish Therapist",
-                                      "Robot Grandpa’s Quantum Rant",
-                                          "Glitch Pixel Cooks Human Pasta",
-                                              "Two Moons and a Microwaved God",
-                                                  "Bigfoot Opens a Startup in Jupiter"
-                                                    ];
-
-                                                      function generateShow() {
-                                                          const title = shows[Math.floor(Math.random() * shows.length)];
-                                                              document.getElementById("show-title").innerText = "📺 " + title;
-                                                                }
-
-                                                                  generateShow();
-                                                                  </script>8k
-</body>
-</html>
+                                                                                                                                                                                            loadVideo(); // Load first video on page load
+                                                                                                                                                                                              </script>
+                                                                                                                                                                                              </body>
+                                                                                                                                                                                              </html>

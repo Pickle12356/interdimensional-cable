@@ -1,84 +1,93 @@
 <!DOCTYPE html><html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>🛡️ Interdimensional Cable</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>📡 Interdimensional Cable</title>
   <style>
     body {
       background-color: black;
-      color: cyan;
+      color: white;
       font-family: monospace;
-      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
       margin: 0;
-      padding: 0;
     }
     h1 {
-      text-shadow: 0 0 20px cyan;
+      color: cyan;
+      text-shadow: 0 0 10px cyan;
     }
-    #frameContainer {
+    #video-container {
+      width: 90%;
+      max-width: 800px;
+      aspect-ratio: 16/9;
+      margin-bottom: 20px;
       border: 4px solid cyan;
-      box-shadow: 0 0 30px cyan;
-      width: 90vw;
-      max-width: 720px;
-      height: 405px;
-      margin: 20px auto;
-      position: relative;
+      box-shadow: 0 0 40px cyan;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: black;
     }
     iframe {
       width: 100%;
       height: 100%;
       border: none;
     }
-    #nextBtn {
-      background-color: cyan;
+    button {
+      padding: 1rem 2rem;
+      font-size: 1.2rem;
       border: none;
-      padding: 12px 24px;
-      font-size: 1.2em;
-      font-weight: bold;
       border-radius: 10px;
-      box-shadow: 0 0 10px cyan;
+      background-color: cyan;
       color: black;
+      font-weight: bold;
       cursor: pointer;
-      margin-top: 20px;
+      box-shadow: 0 0 10px cyan;
+      margin-bottom: 30px;
     }
-    #staticScreen {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: url("https://media.tenor.com/I6kN-6X7nhAAAAAj/tv-static.gif") center/cover no-repeat;
-      display: none;
-      z-index: 2;
+    .static {
+      background: url('https://media.giphy.com/media/oEI9uBYSzLpBK/giphy.gif') center center / cover no-repeat;
     }
   </style>
 </head>
 <body>
-  <h1>🛡️ Interdimensional Cable</h1>
-  <div id="frameContainer">
-    <div id="staticScreen"></div>
-    <iframe id="videoFrame" allowfullscreen></iframe>
+  <h1>📡 Interdimensional Cable</h1>
+  <div id="video-container">
+    <iframe id="ytplayer" src="" allowfullscreen></iframe>
   </div>
-  <button id="nextBtn">Next Channel 📺</button>  <script>
-    const videos = [
-      "wRAq3iHjzdU", "m9z9Ggbn4V4", "cFJ6pBG-y3c", "06fg0EutNac", "ZPJnGOPdZ9g",
-      "hZ14Rcz5CDo", "rH_cRfbQWjE", "5lJr6cBB0-Q", "sG9IaFlE0SY", "oBrKwxuPj2Y",
-      "8-84rRRjsH0", "bI24aznN2NU", "GQnLMj_0R3o", "xgrsNJ1zoZM", "ey35nH_RdQg"
+  <button onclick="nextVideo()">Next Channel 📺</button>  <script>
+    const videoIds = [
+      "1LzggK5yItM", // AI pizza ad
+      "fBmYF7Y-PBo", // weird interview glitch
+      "rL7xH1aZ0sE", // surreal robot show
+      "gPzGOWHa5xE", // AI generated sitcom
+      "wzS0SJjM6_0", // cursed cooking
+      "GzEj67zVKNw", // AI newscast
+      "bKXd4b7fLF8", // disturbing parody
+      "zB0lrMYkU2I", // fake commercials
+      "rFzYZLh6KVA", // deepfake gameshow
+      "qJgTnDqfEzI", // 3D weird sketch
     ];
 
-    const frame = document.getElementById("videoFrame");
-    const staticScreen = document.getElementById("staticScreen");
+    let currentIndex = -1;
 
-    function playRandomVideo() {
-      staticScreen.style.display = "block";
+    function nextVideo() {
+      const container = document.getElementById('video-container');
+      const player = document.getElementById('ytplayer');
+
+      container.classList.add('static');
       setTimeout(() => {
-        const id = videos[Math.floor(Math.random() * videos.length)];
-        frame.src = `https://www.youtube.com/embed/${id}?autoplay=1&rel=0`;
-        staticScreen.style.display = "none";
-      }, 1200); // simulate static delay
+        container.classList.remove('static');
+        currentIndex = (currentIndex + 1) % videoIds.length;
+        const newSrc = `https://www.youtube.com/embed/${videoIds[currentIndex]}?autoplay=1&rel=0&modestbranding=1&controls=0`;
+        player.src = newSrc;
+      }, 1000);
     }
 
-    document.getElementById("nextBtn").addEventListener("click", playRandomVideo);
-    playRandomVideo(); // Load first video automatically
+    // Load first video
+    nextVideo();
   </script></body>
 </html>

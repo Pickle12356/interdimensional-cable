@@ -12,7 +12,7 @@
       flex-direction: column;
       align-items: center;
       justify-content: flex-start;
-      padding-top: 80px;
+      padding-top: 60px;
     }
 
     h1 {
@@ -47,6 +47,8 @@
       border: none;
       border-radius: 8px;
       cursor: pointer;
+      position: relative;
+      z-index: 2;
     }
   </style>
 </head>
@@ -62,9 +64,8 @@
 
   <script>
     const videoIds = [
-      "_LMjUZnr5lo", "cB9fR02HAY4", "IfX6I5iSq7k", "NCW-esQZmZk", "bUL8ECCOrHY", "oenPXAe4mpM",
-      "s4zfRD3X0Lk", "kt-e7tvUc5c", "ziTWuat1nE4", "YIHkMZMMFao", "H7CQFFv6lVU", "sr8D9h0wRfI",
-      "SHb-3oIAFTs", "t3Q1pD3_He8", "1_mHfXR9uec", "DkEekl4OwRU", "y2NOad4q7QI", "EsVilnnmk_E",   // Bigfoot Vlog
+      // Paste your full 
+        // Bigfoot Vlog
   "_LMjUZnr5lo",
   "cB9fR02HAY4",
   "IfX6I5iSq7k",
@@ -266,27 +267,41 @@
   "UclLvxxqRNU",
   "VbfpW0pbvaU",
   "fLexgOxsZu0"
+      // ...
     ];
 
-    let shuffled = [...videoIds].sort(() => Math.random() - 0.5);
+    let shuffled = shuffleArray([...videoIds]);
     let currentIndex = 0;
     const frame = document.getElementById("yt-frame");
+
+    function shuffleArray(arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
 
     function loadVideo(id) {
       frame.src = `https://www.youtube.com/embed/${id}?autoplay=1&rel=0&modestbranding=1`;
     }
 
     function showNext() {
-      frame.src = "https://media.tenor.com/f1gxWjPC3RgAAAAC/tv-static.gif"; // static effect
+      frame.src = "https://media.tenor.com/f1gxWjPC3RgAAAAC/tv-static.gif";
+
       setTimeout(() => {
+        if (currentIndex >= shuffled.length) {
+          shuffled = shuffleArray([...videoIds]);
+          currentIndex = 0;
+        }
+
         loadVideo(shuffled[currentIndex]);
-        currentIndex = (currentIndex + 1) % shuffled.length;
+        currentIndex++;
       }, 1000);
     }
 
     document.getElementById("next-button").onclick = showNext;
 
-    // Load first video after user interacts
     window.addEventListener("DOMContentLoaded", () => {
       showNext();
     });

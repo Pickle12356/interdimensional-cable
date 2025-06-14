@@ -2,82 +2,83 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>📡 Interdimensional Cable</title>
+  <title>🛡️ Interdimensional Cable</title>
   <style>
     body {
-      background: black;
-      color: white;
-      font-family: 'Courier New', Courier, monospace;
+      background-color: black;
+      color: cyan;
+      font-family: monospace;
       text-align: center;
       margin: 0;
-      padding: 2rem;
+      padding: 0;
     }
     h1 {
-      color: #00ffff;
-      text-shadow: 0 0 10px #00ffff;
+      text-shadow: 0 0 20px cyan;
     }
-    #frame {
+    #frameContainer {
+      border: 4px solid cyan;
+      box-shadow: 0 0 30px cyan;
       width: 90vw;
-      height: 50vw;
-      max-width: 960px;
-      max-height: 540px;
-      border: 5px solid #00ffff;
-      box-shadow: 0 0 30px #00ffff;
-      margin: 2rem auto;
-      background-color: black;
+      max-width: 720px;
+      height: 405px;
+      margin: 20px auto;
+      position: relative;
     }
     iframe {
       width: 100%;
       height: 100%;
       border: none;
     }
-    button {
-      background-color: #00ffff;
-      color: black;
-      font-size: 1.2rem;
-      padding: 0.75rem 2rem;
+    #nextBtn {
+      background-color: cyan;
       border: none;
-      border-radius: 0.5rem;
+      padding: 12px 24px;
+      font-size: 1.2em;
+      font-weight: bold;
+      border-radius: 10px;
+      box-shadow: 0 0 10px cyan;
+      color: black;
       cursor: pointer;
-      box-shadow: 0 0 15px #00ffff;
+      margin-top: 20px;
     }
-    button:hover {
-      background-color: #00dddd;
+    #staticScreen {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url("https://media.tenor.com/I6kN-6X7nhAAAAAj/tv-static.gif") center/cover no-repeat;
+      display: none;
+      z-index: 2;
     }
   </style>
 </head>
 <body>
-  <h1>📡 Interdimensional Cable</h1>
-  <div id="frame">
-    <iframe id="video" allowfullscreen></iframe>
+  <h1>🛡️ Interdimensional Cable</h1>
+  <div id="frameContainer">
+    <div id="staticScreen"></div>
+    <iframe id="videoFrame" allowfullscreen></iframe>
   </div>
-  <button id="next">Next Channel 📺</button>  <script>
+  <button id="nextBtn">Next Channel 📺</button>  <script>
     const videos = [
-      { id: "RtU_mdL2vBM", title: "AI Weirdness Compilation 1" },
-      { id: "vTIIMJ9tUc8", title: "Weird AI Stand-up" },
-      { id: "xvFZjo5PgG0", title: "Random Channel News Parody" },
-      { id: "dQw4w9WgXcQ", title: "Meta Cable AI Story" },
-      { id: "J---aiyznGQ", title: "Surreal AI Cartoon Generator" }
+      "wRAq3iHjzdU", "m9z9Ggbn4V4", "cFJ6pBG-y3c", "06fg0EutNac", "ZPJnGOPdZ9g",
+      "hZ14Rcz5CDo", "rH_cRfbQWjE", "5lJr6cBB0-Q", "sG9IaFlE0SY", "oBrKwxuPj2Y",
+      "8-84rRRjsH0", "bI24aznN2NU", "GQnLMj_0R3o", "xgrsNJ1zoZM", "ey35nH_RdQg"
     ];
 
-    const frame = document.getElementById("video");
-    const button = document.getElementById("next");
+    const frame = document.getElementById("videoFrame");
+    const staticScreen = document.getElementById("staticScreen");
 
-    function getRandomVideo() {
-      const random = Math.floor(Math.random() * videos.length);
-      return videos[random].id;
-    }
-
-    function playStaticThenVideo() {
-      frame.src = "https://media.tenor.com/r7BLkF6GCmUAAAAC/tv-static.gif";
+    function playRandomVideo() {
+      staticScreen.style.display = "block";
       setTimeout(() => {
-        const videoId = getRandomVideo();
-        frame.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
-      }, 600);
+        const id = videos[Math.floor(Math.random() * videos.length)];
+        frame.src = `https://www.youtube.com/embed/${id}?autoplay=1&rel=0`;
+        staticScreen.style.display = "none";
+      }, 1200); // simulate static delay
     }
 
-    button.addEventListener("click", playStaticThenVideo);
-
-    window.onload = playStaticThenVideo;
+    document.getElementById("nextBtn").addEventListener("click", playRandomVideo);
+    playRandomVideo(); // Load first video automatically
   </script></body>
 </html>

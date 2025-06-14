@@ -1,93 +1,113 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>📡 Interdimensional Cable</title>
   <style>
     body {
       background-color: black;
-      color: white;
-      font-family: monospace;
+      color: cyan;
+      font-family: 'Courier New', Courier, monospace;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      min-height: 100vh;
+      height: 100vh;
+      overflow: hidden;
       margin: 0;
     }
+
     h1 {
-      color: cyan;
       text-shadow: 0 0 10px cyan;
     }
-    #video-container {
-      width: 90%;
-      max-width: 800px;
-      aspect-ratio: 16/9;
-      margin-bottom: 20px;
+
+    .frame {
       border: 4px solid cyan;
-      box-shadow: 0 0 40px cyan;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background-color: black;
+      box-shadow: 0 0 30px cyan;
+      width: 90%;
+      max-width: 720px;
+      height: 405px;
+      margin: 20px auto;
+      position: relative;
     }
+
     iframe {
       width: 100%;
       height: 100%;
       border: none;
     }
-    button {
-      padding: 1rem 2rem;
-      font-size: 1.2rem;
-      border: none;
-      border-radius: 10px;
+
+    .btn {
       background-color: cyan;
       color: black;
       font-weight: bold;
+      padding: 10px 25px;
+      font-size: 18px;
+      border: none;
+      border-radius: 8px;
       cursor: pointer;
       box-shadow: 0 0 10px cyan;
-      margin-bottom: 30px;
+      margin-top: 20px;
     }
+
     .static {
       background: url('https://media.giphy.com/media/oEI9uBYSzLpBK/giphy.gif') center center / cover no-repeat;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      z-index: 10;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .show-static {
+      opacity: 1;
     }
   </style>
 </head>
 <body>
   <h1>📡 Interdimensional Cable</h1>
-  <div id="video-container">
-    <iframe id="ytplayer" src="" allowfullscreen></iframe>
+
+  <div class="frame">
+    <div id="static" class="static"></div>
+    <iframe id="player" allow="autoplay; encrypted-media" allowfullscreen></iframe>
   </div>
-  <button onclick="nextVideo()">Next Channel 📺</button>  <script>
+
+  <button class="btn" onclick="nextVideo()">Next Channel 📺</button>
+
+  <script>
     const videoIds = [
-      "1LzggK5yItM", // AI pizza ad
-      "fBmYF7Y-PBo", // weird interview glitch
-      "rL7xH1aZ0sE", // surreal robot show
-      "gPzGOWHa5xE", // AI generated sitcom
-      "wzS0SJjM6_0", // cursed cooking
-      "GzEj67zVKNw", // AI newscast
-      "bKXd4b7fLF8", // disturbing parody
-      "zB0lrMYkU2I", // fake commercials
-      "rFzYZLh6KVA", // deepfake gameshow
-      "qJgTnDqfEzI", // 3D weird sketch
+      "gWEd3K3Nnsc", // Replace these with verified working videos
+      "2ZIpFytCSVc",
+      "dQw4w9WgXcQ",
+      "M7lc1UVf-VE",
+      "kOdO2IY5t4s"
     ];
 
-    let currentIndex = -1;
+    let currentIndex = 0;
 
-    function nextVideo() {
-      const container = document.getElementById('video-container');
-      const player = document.getElementById('ytplayer');
+    const player = document.getElementById("player");
+    const staticOverlay = document.getElementById("static");
 
-      container.classList.add('static');
-      setTimeout(() => {
-        container.classList.remove('static');
-        currentIndex = (currentIndex + 1) % videoIds.length;
-        const newSrc = `https://www.youtube.com/embed/${videoIds[currentIndex]}?autoplay=1&rel=0&modestbranding=1&controls=0`;
-        player.src = newSrc;
-      }, 1000);
+    function loadVideo(id) {
+      player.src = `https://www.youtube.com/embed/${id}?autoplay=1&rel=0&modestbranding=1`;
     }
 
-    // Load first video
-    nextVideo();
-  </script></body>
+    function nextVideo() {
+      // Show static effect
+      staticOverlay.classList.add("show-static");
+
+      setTimeout(() => {
+        currentIndex = (currentIndex + 1) % videoIds.length;
+        loadVideo(videoIds[currentIndex]);
+        staticOverlay.classList.remove("show-static");
+      }, 500); // static delay
+    }
+
+    window.onload = () => {
+      loadVideo(videoIds[currentIndex]);
+    };
+  </script>
+</body>
 </html>
